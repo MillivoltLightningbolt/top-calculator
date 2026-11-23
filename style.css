@@ -70,7 +70,3 @@ button.equals {
 .operator {
   background-color: hsl(130 73.6% 58.4%);
 }
-
-.dot {
-  visibility: hidden;
-}
