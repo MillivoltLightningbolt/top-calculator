@@ -41,7 +41,7 @@ class Operand{
   }
 
   setValue(x) {
-    this.value = x;
+    this.value = String(x);
   }
 
   reset() {
@@ -122,87 +122,84 @@ function resetState() {
   currentState = STATE_UNSET;
 }
 
+const keys = {
+  "digit": (digit) => handleDigits(digit),
+  "operator": (op) => handleOperator(op),
+  "clear-all": handleClearAll,
+  "clear-entry": handleClearEntry,
+  "equals": handleEquals,
+  "decimal": handleDecimalPoint,
+  "reset": resetState,
+}
+
+function handleKey(action, key) {
+  try {
+    keys[action]?.(key);
+  } catch (err) {
+    if (err instanceof DivisionByZeroError) {
+      currentState = STATE_DIVISION_BY_ZERO;
+    } else {
+      throw err;
+    }
+  } finally {
+    updateView();
+  }
+}
+
 buttons.addEventListener("click", (event) => {
   const btn = event.target;
-  try {
-    if (btn.classList.contains("digit")) {
-      handleDigits(btn.textContent);
-    } else if (btn.classList.contains("clear-all")) {
-      handleClearAll();
-    } else if (btn.classList.contains("clear-entry")) {
-      handleClearEntry();
-    } else if (btn.classList.contains("operator")) {
-      handleOperator(btn.textContent);
-    } else if (btn.classList.contains("equals")){
-      handleEquals();
-    } else if (btn.classList.contains("decimal")) {
-      handleDecimalPoint();
+
+  
+  if (btn.classList.contains("operator")) {
+    handleKey("operator", btn.textContent);
+  } else if (btn.classList.contains("equals")){
+    handleKey("equals");
+  } else {
+    if (btn.classList.length > 1) {
+      console.error(`Expected only 1 CSS class, got: ${btn.classList.length}:\n${btn.classList}`);
     }
-  } catch (err) {
-    if (err instanceof DivisionByZeroError) {
-      currentState = STATE_DIVISION_BY_ZERO;
-    } else {
-      throw err;
-    }
-  } finally {
-    updateView();
+    handleKey(btn.className, btn.textContent);
   }
 })
 
-let keyPressed;
-
-const body = document.body;
-
-body.addEventListener("keydown", (event) => {
+document.body.addEventListener("keydown", (event) => {
   const key = event.key;
 
-  try {
-    if ("0123456789".includes(key)) {
-      handleDigits(key);
-    } else if ("+-*/".includes(key)) {
-      handleOperator(key);
-    } else if (key === "=") {
-      handleEquals();
-    } else if (key === "Delete" || key === "Backspace") {
-      handleClearEntry();
-    } else if (".,".includes(key)) {
-      handleDecimalPoint();
-    } else if (key === "Enter") {
-      handleEquals();
-    } else if (key === "Escape") {
-      resetState();
-    }
-  } catch (err) {
-    if (err instanceof DivisionByZeroError) {
-      currentState = STATE_DIVISION_BY_ZERO;
-    } else {
-      throw err;
-    }
-  } finally {
-    updateView();
+  if ("0123456789".includes(key)) {
+    handleKey("digit", key);
+  } else if ("+-*/".includes(key)) {
+    handleKey("operator", key);
+  } else if (key === "=") {
+    handleKey("equals");
+  } else if (key === "Delete" || key === "Backspace") {
+    handleKey("clear-entry");
+  } else if (".,".includes(key)) {
+    handleKey("decimal");
+  } else if (key === "Enter") {
+    handleKey("equals");
+  } else if (key === "Escape") {
+    handleKey("reset");
   }
 })
 
-function handleDigits(currentInput) {
-  // const currentInput = btn.textContent;
-
+function handleDigits(digit) {
   switch (currentState) {
     case STATE_UNSET:
-      number_1.setValue(currentInput);
+      number_1.setValue(digit);
       currentState = STATE_NUMBER_1;
       break;
     case STATE_NUMBER_1:
-      number_1.append(currentInput);
+      number_1.append(digit);
       break;
     case STATE_NUMBER_2:
-      number_2.append(currentInput);
+      number_2.append(digit);
       break;
     case STATE_OPERATOR:
-      number_2.setValue(currentInput);
+      number_2.setValue(digit);
       currentState = STATE_NUMBER_2;
       break;
     case STATE_RESULT:
-      const tmp = currentInput;
+      const tmp = digit;
       resetState();
       number_1.setValue(tmp);
       currentState = STATE_NUMBER_1;
@@ -210,36 +207,31 @@ function handleDigits(currentInput) {
   }
 }
 
-function handleOperator(currentInput) {
-  // const currentInput = btn.textContent;
-
+function handleOperator(op) {
   switch (currentState) {
     case STATE_UNSET:
       number_1.setValue("0");
-      operator = currentInput;
+      operator = op;
       currentState = STATE_OPERATOR;
       break;
     case STATE_NUMBER_1:
-      operator = currentInput;
+      operator = op;
       currentState = STATE_OPERATOR;
       break;
     case STATE_NUMBER_2:
       evaluateResult();
-      continueWithResult(currentInput);
+      continueWithResult(op);
       break;
     case STATE_OPERATOR:
-      operator = currentInput;
+      operator = op;
       break;
     case STATE_RESULT:
-      continueWithResult(currentInput);
+      continueWithResult(op);
       break;
   }
 }
 
 function continueWithResult(currentInput) {
-  // if (currentState === STATE_DIVISION_BY_ZERO) {
-  //   return;
-  // }
   number_1.setValue(currentResult.getValue());
   operator = currentInput;
   currentState = STATE_OPERATOR;
