@@ -13,7 +13,12 @@ const STATE_OPERATOR = "operator";
 const STATE_RESULT = "result";
 const STATE_DIVISION_BY_ZERO = "div by zero error";
 
-class DivisionByZeroError extends Error {};
+class DivisionByZeroError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "DivisionByZeroError";
+  }
+};
 
 class Operand{
   constructor(value) {
@@ -73,7 +78,7 @@ class Operand{
 
   unsafeDivision(other) {
     if (other.toNumber() === 0) {
-      throw DivisionByZeroError;
+      throw new DivisionByZeroError();
     } else {
       return new Operand(this.toNumber() / other.toNumber());
     }
@@ -121,26 +126,65 @@ buttons.addEventListener("click", (event) => {
   const btn = event.target;
   try {
     if (btn.classList.contains("digit")) {
-      handleDigits(btn);
+      handleDigits(btn.textContent);
     } else if (btn.classList.contains("clear-all")) {
       handleClearAll();
     } else if (btn.classList.contains("clear-entry")) {
       handleClearEntry();
     } else if (btn.classList.contains("operator")) {
-      handleOperator(btn);
+      handleOperator(btn.textContent);
     } else if (btn.classList.contains("equals")){
       handleEquals();
     } else if (btn.classList.contains("decimal")) {
       handleDecimalPoint();
     }
-  } catch (DivisionByZeroError) {
-    currentState = STATE_DIVISION_BY_ZERO;
+  } catch (err) {
+    if (err instanceof DivisionByZeroError) {
+      currentState = STATE_DIVISION_BY_ZERO;
+    } else {
+      throw err;
+    }
+  } finally {
+    updateView();
   }
-  updateView();
 })
 
-function handleDigits(btn) {
-  const currentInput = btn.textContent;
+let keyPressed;
+
+const body = document.body;
+
+body.addEventListener("keydown", (event) => {
+  const key = event.key;
+
+  try {
+    if ("0123456789".includes(key)) {
+      handleDigits(key);
+    } else if ("+-*/".includes(key)) {
+      handleOperator(key);
+    } else if (key === "=") {
+      handleEquals();
+    } else if (key === "Delete" || key === "Backspace") {
+      handleClearEntry();
+    } else if (".,".includes(key)) {
+      handleDecimalPoint();
+    } else if (key === "Enter") {
+      handleEquals();
+    } else if (key === "Escape") {
+      resetState();
+    }
+  } catch (err) {
+    if (err instanceof DivisionByZeroError) {
+      currentState = STATE_DIVISION_BY_ZERO;
+    } else {
+      throw err;
+    }
+  } finally {
+    updateView();
+  }
+})
+
+function handleDigits(currentInput) {
+  // const currentInput = btn.textContent;
 
   switch (currentState) {
     case STATE_UNSET:
@@ -166,8 +210,8 @@ function handleDigits(btn) {
   }
 }
 
-function handleOperator(btn) {
-  const currentInput = btn.textContent;
+function handleOperator(currentInput) {
+  // const currentInput = btn.textContent;
 
   switch (currentState) {
     case STATE_UNSET:
@@ -219,6 +263,9 @@ function handleClearEntry() {
     case STATE_OPERATOR:
       operator = "";
       currentState = STATE_NUMBER_1;
+      break;
+    case STATE_RESULT:
+      resetState();
       break;
   }
 }
