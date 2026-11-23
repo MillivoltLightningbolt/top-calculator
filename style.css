@@ -17,6 +17,18 @@ button {
   box-shadow: 0.3rem 0.3rem hsl(233 73.6% 9.3%);
 }
 
+button.double-width {
+  width: 8rem;
+}
+
+button.double-height {
+  height: 8rem;
+}
+
+button.equals {
+  background-color: hsl(59 89.2% 44.4%);
+}
+
 .calculator {
   display: flex;
   align-items: center;
@@ -58,13 +70,10 @@ button {
   margin: 0.3rem;
 }
 
+.row.zero,
 .row.equals {
   display: flex;
-  justify-content: end;
-}
-
-button.equals {
-  background-color: hsl(59 89.2% 44.4%);
+  justify-content: start;
 }
 
 .operator {

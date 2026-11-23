@@ -27,6 +27,10 @@ class Operand{
     }
   }
 
+  removeLastDigit() {
+    this.value = this.value.slice(0, this.value.length - 1);
+  }
+
   getValue() {
     return this.value;
   }
@@ -48,7 +52,7 @@ class Operand{
   }
 
   isUnset() {
-    return (this.value === null);
+    return (this.value === "");
   }
 
   isZero() {
@@ -118,8 +122,10 @@ buttons.addEventListener("click", (event) => {
   try {
     if (btn.classList.contains("digit")) {
       handleDigits(btn);
-    } else if (btn.classList.contains("clear")) {
-      handleClear();
+    } else if (btn.classList.contains("clear-all")) {
+      handleClearAll();
+    } else if (btn.classList.contains("clear-entry")) {
+      handleClearEntry();
     } else if (btn.classList.contains("operator")) {
       handleOperator(btn);
     } else if (btn.classList.contains("equals")){
@@ -195,8 +201,26 @@ function continueWithResult(currentInput) {
   currentState = STATE_OPERATOR;
 }
 
-function handleClear() {
+function handleClearAll() {
   resetState();
+}
+
+function handleClearEntry() {
+  switch (currentState) {
+    case STATE_NUMBER_1:
+      number_1.removeLastDigit();
+      break;
+    case STATE_NUMBER_2:
+      number_2.removeLastDigit();
+      if (number_2.isUnset()) {
+        currentState = STATE_OPERATOR;
+      }
+      break;
+    case STATE_OPERATOR:
+      operator = "";
+      currentState = STATE_NUMBER_1;
+      break;
+  }
 }
 
 function handleEquals() {
