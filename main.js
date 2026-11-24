@@ -93,7 +93,7 @@ class Operand{
 
 // calculator state
 let operand_1 = new Operand();
-let number_2 = new Operand();
+let operand_2 = new Operand();
 let currentResult = new Operand();
 let operator = "";
 let currentState = STATE_NUMBER_1;
@@ -116,7 +116,7 @@ function operate(op, a, b) {
 
 function resetState() {
   operand_1.reset();
-  number_2.reset();
+  operand_2.reset();
   currentResult.reset();
   operator = "";
   currentState = STATE_UNSET;
@@ -193,10 +193,10 @@ function handleDigits(digit) {
       operand_1.append(digit);
       break;
     case STATE_NUMBER_2:
-      number_2.append(digit);
+      operand_2.append(digit);
       break;
     case STATE_OPERATOR:
-      number_2.setValue(digit);
+      operand_2.setValue(digit);
       currentState = STATE_NUMBER_2;
       break;
     case STATE_RESULT:
@@ -247,8 +247,8 @@ function handleClearEntry() {
       operand_1.removeLastDigit();
       break;
     case STATE_NUMBER_2:
-      number_2.removeLastDigit();
-      if (number_2.isUnset()) {
+      operand_2.removeLastDigit();
+      if (operand_2.isUnset()) {
         currentState = STATE_OPERATOR;
       }
       break;
@@ -272,19 +272,19 @@ function handleEquals() {
 }
 
 function isDividingByZero() {
-  return (operator === OP_DIV && number_2.isZero());
+  return (operator === OP_DIV && operand_2.isZero());
 }
 
 function evaluateResult() {
   if (
     operand_1.isUnset()
-    || number_2.isUnset()
+    || operand_2.isUnset()
     || !operator
   ) {
     // cannot evaluate if either operand or the operator are missing
     return;
   }
-  currentResult = operate(operator, operand_1, number_2);
+  currentResult = operate(operator, operand_1, operand_2);
   currentState = STATE_RESULT;
 }
 
@@ -296,7 +296,7 @@ function updateView() {
       msg = operand_1.toView();
       break
     case STATE_NUMBER_2:
-      msg = `${operand_1.toView()} ${operator} ${number_2.toView()}`
+      msg = `${operand_1.toView()} ${operator} ${operand_2.toView()}`
       break;
     case STATE_OPERATOR:
       msg = `${operand_1.toView()} ${operator}`
@@ -318,7 +318,7 @@ function handleDecimalPoint() {
       operand_1.addDecimalPoint();
       break;
     case STATE_NUMBER_2:
-      number_2.addDecimalPoint();
+      operand_2.addDecimalPoint();
       break
   }
 }
