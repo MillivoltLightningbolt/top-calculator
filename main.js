@@ -3,7 +3,7 @@ const OP_SUB = "-";
 const OP_MUL = "*";
 const OP_DIV = "/";
 
-const MAX_NR_OF_DIGITS = 19;
+const MAX_INPUT_LENGTH = 19;
 
 // TODO: maybe store state in object ?
 const STATE_UNSET = "unset"; // no input yet
@@ -22,12 +22,12 @@ class DivisionByZeroError extends Error {
 
 class Operand{
   constructor(value) {
-    // TODO: what if value.length > MAX_NR_OF_DIGITS ??
+    // TODO: what if value.length > MAX_INPUT_LENGTH ??
     this.value = value ?? "";
   }
 
   append(x) {
-    if ((this.value + x).length < MAX_NR_OF_DIGITS) {
+    if ((this.value + x).length <= MAX_INPUT_LENGTH) {
       this.value += x;
     }
   }
