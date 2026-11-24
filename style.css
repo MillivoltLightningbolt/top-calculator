@@ -29,6 +29,11 @@ button.equals {
   background-color: hsl(59 89.2% 44.4%);
 }
 
+button.clear-entry,
+button.clear-all {
+  background-color: hsl(233 0% 83.6%);  
+}
+
 .calculator {
   display: flex;
   align-items: center;
