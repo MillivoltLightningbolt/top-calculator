@@ -61,7 +61,7 @@ class Operand{
   }
 
   isZero() {
-    return (this.value === 0);
+    return (this.toNumber() === 0);
   }
 
   add(other) {
