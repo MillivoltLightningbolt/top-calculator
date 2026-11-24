@@ -7,7 +7,7 @@ const MAX_INPUT_LENGTH = 18;
 
 // TODO: maybe store state in object ?
 const STATE_UNSET = "unset"; // no input yet
-const STATE_NUMBER_1 = "number 1";
+const STATE_OPERAND_1 = "number 1";
 const STATE_NUMBER_2 = "number 2";
 const STATE_OPERATOR = "operator";
 const STATE_RESULT = "result";
@@ -96,7 +96,7 @@ let operand_1 = new Operand();
 let operand_2 = new Operand();
 let currentResult = new Operand();
 let operator = "";
-let currentState = STATE_NUMBER_1;
+let currentState = STATE_OPERAND_1;
 
 const display = document.querySelector(".display");
 const buttons = document.querySelector(".keypad");
@@ -187,9 +187,9 @@ function handleDigits(digit) {
   switch (currentState) {
     case STATE_UNSET:
       operand_1.setValue(digit);
-      currentState = STATE_NUMBER_1;
+      currentState = STATE_OPERAND_1;
       break;
-    case STATE_NUMBER_1:
+    case STATE_OPERAND_1:
       operand_1.append(digit);
       break;
     case STATE_NUMBER_2:
@@ -202,7 +202,7 @@ function handleDigits(digit) {
     case STATE_RESULT:
       resetState();
       operand_1.setValue(digit);
-      currentState = STATE_NUMBER_1;
+      currentState = STATE_OPERAND_1;
       break;
   }
 }
@@ -214,7 +214,7 @@ function handleOperator(op) {
       operator = op;
       currentState = STATE_OPERATOR;
       break;
-    case STATE_NUMBER_1:
+    case STATE_OPERAND_1:
       operator = op;
       currentState = STATE_OPERATOR;
       break;
@@ -243,7 +243,7 @@ function handleClearAll() {
 
 function handleClearEntry() {
   switch (currentState) {
-    case STATE_NUMBER_1:
+    case STATE_OPERAND_1:
       operand_1.removeLastDigit();
       break;
     case STATE_NUMBER_2:
@@ -254,7 +254,7 @@ function handleClearEntry() {
       break;
     case STATE_OPERATOR:
       operator = "";
-      currentState = STATE_NUMBER_1;
+      currentState = STATE_OPERAND_1;
       break;
     case STATE_RESULT:
       currentResult.removeLastDigit();
@@ -263,7 +263,7 @@ function handleClearEntry() {
 }
 
 function handleEquals() {
-  if (currentState === STATE_NUMBER_1) {
+  if (currentState === STATE_OPERAND_1) {
     // user enters a number and hits equals => that just evaluates to the entered number
     currentResult.setValue(operand_1.getValue());
   } else {
@@ -292,7 +292,7 @@ function updateView() {
   let msg = "";
 
   switch (currentState) {
-    case STATE_NUMBER_1:
+    case STATE_OPERAND_1:
       msg = operand_1.toView();
       break
     case STATE_NUMBER_2:
@@ -314,7 +314,7 @@ function updateView() {
 
 function handleDecimalPoint() {
   switch (currentState) {
-    case STATE_NUMBER_1:
+    case STATE_OPERAND_1:
       operand_1.addDecimalPoint();
       break;
     case STATE_NUMBER_2:
