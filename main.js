@@ -277,7 +277,11 @@ function isDividingByZero() {
 }
 
 function evaluateResult() {
-  if (number_1.isUnset() || number_2.isUnset() || operator === null) {
+  if (
+    number_1.isUnset()
+    || number_2.isUnset()
+    || !operator
+  ) {
     // cannot evaluate if either operand or the operator are missing
     return;
   }
