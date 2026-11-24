@@ -92,7 +92,7 @@ class Operand{
 }
 
 // calculator state
-let number_1 = new Operand();
+let operand_1 = new Operand();
 let number_2 = new Operand();
 let currentResult = new Operand();
 let operator = "";
@@ -115,7 +115,7 @@ function operate(op, a, b) {
 }
 
 function resetState() {
-  number_1.reset();
+  operand_1.reset();
   number_2.reset();
   currentResult.reset();
   operator = "";
@@ -186,11 +186,11 @@ document.body.addEventListener("keydown", (event) => {
 function handleDigits(digit) {
   switch (currentState) {
     case STATE_UNSET:
-      number_1.setValue(digit);
+      operand_1.setValue(digit);
       currentState = STATE_NUMBER_1;
       break;
     case STATE_NUMBER_1:
-      number_1.append(digit);
+      operand_1.append(digit);
       break;
     case STATE_NUMBER_2:
       number_2.append(digit);
@@ -201,7 +201,7 @@ function handleDigits(digit) {
       break;
     case STATE_RESULT:
       resetState();
-      number_1.setValue(digit);
+      operand_1.setValue(digit);
       currentState = STATE_NUMBER_1;
       break;
   }
@@ -210,7 +210,7 @@ function handleDigits(digit) {
 function handleOperator(op) {
   switch (currentState) {
     case STATE_UNSET:
-      number_1.setValue("0");
+      operand_1.setValue("0");
       operator = op;
       currentState = STATE_OPERATOR;
       break;
@@ -232,7 +232,7 @@ function handleOperator(op) {
 }
 
 function continueWithResult(nextOperator) {
-  number_1.setValue(currentResult.getValue());
+  operand_1.setValue(currentResult.getValue());
   operator = nextOperator;
   currentState = STATE_OPERATOR;
 }
@@ -244,7 +244,7 @@ function handleClearAll() {
 function handleClearEntry() {
   switch (currentState) {
     case STATE_NUMBER_1:
-      number_1.removeLastDigit();
+      operand_1.removeLastDigit();
       break;
     case STATE_NUMBER_2:
       number_2.removeLastDigit();
@@ -265,7 +265,7 @@ function handleClearEntry() {
 function handleEquals() {
   if (currentState === STATE_NUMBER_1) {
     // user enters a number and hits equals => that just evaluates to the entered number
-    currentResult.setValue(number_1.getValue());
+    currentResult.setValue(operand_1.getValue());
   } else {
     evaluateResult();
   }
@@ -277,14 +277,14 @@ function isDividingByZero() {
 
 function evaluateResult() {
   if (
-    number_1.isUnset()
+    operand_1.isUnset()
     || number_2.isUnset()
     || !operator
   ) {
     // cannot evaluate if either operand or the operator are missing
     return;
   }
-  currentResult = operate(operator, number_1, number_2);
+  currentResult = operate(operator, operand_1, number_2);
   currentState = STATE_RESULT;
 }
 
@@ -293,13 +293,13 @@ function updateView() {
 
   switch (currentState) {
     case STATE_NUMBER_1:
-      msg = number_1.toView();
+      msg = operand_1.toView();
       break
     case STATE_NUMBER_2:
-      msg = `${number_1.toView()} ${operator} ${number_2.toView()}`
+      msg = `${operand_1.toView()} ${operator} ${number_2.toView()}`
       break;
     case STATE_OPERATOR:
-      msg = `${number_1.toView()} ${operator}`
+      msg = `${operand_1.toView()} ${operator}`
       break;
     case STATE_RESULT:
       msg = currentResult.toView();
@@ -315,7 +315,7 @@ function updateView() {
 function handleDecimalPoint() {
   switch (currentState) {
     case STATE_NUMBER_1:
-      number_1.addDecimalPoint();
+      operand_1.addDecimalPoint();
       break;
     case STATE_NUMBER_2:
       number_2.addDecimalPoint();
