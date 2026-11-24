@@ -24,7 +24,8 @@ button {
   border-radius: 25px;
   font-size: 1.2rem;
   font-weight: bold;
-  box-shadow: 0.3rem 0.3rem hsl(208 43.2% 15.8%);
+  background-color: hsl(208 0% 97%);
+  box-shadow: 0.2rem 0.2rem hsla(208 0% 80% / 0.75);
 }
 
 button.double-width {
