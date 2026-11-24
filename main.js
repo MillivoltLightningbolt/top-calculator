@@ -23,7 +23,7 @@ class DivisionByZeroError extends Error {
 class Operand{
   constructor(value) {
     // TODO: what if value.length > MAX_INPUT_LENGTH ??
-    this.value = value ?? "";
+    this.value = String(value ?? "");
   }
 
   append(x) {
