@@ -8,7 +8,7 @@ const MAX_INPUT_LENGTH = 18;
 // TODO: maybe store state in object ?
 const STATE_UNSET = "unset"; // no input yet
 const STATE_OPERAND_1 = "number 1";
-const STATE_NUMBER_2 = "number 2";
+const STATE_OPERAND_2 = "number 2";
 const STATE_OPERATOR = "operator";
 const STATE_RESULT = "result";
 const STATE_DIVISION_BY_ZERO = "div by zero error";
@@ -192,12 +192,12 @@ function handleDigits(digit) {
     case STATE_OPERAND_1:
       operand_1.append(digit);
       break;
-    case STATE_NUMBER_2:
+    case STATE_OPERAND_2:
       operand_2.append(digit);
       break;
     case STATE_OPERATOR:
       operand_2.setValue(digit);
-      currentState = STATE_NUMBER_2;
+      currentState = STATE_OPERAND_2;
       break;
     case STATE_RESULT:
       resetState();
@@ -218,7 +218,7 @@ function handleOperator(op) {
       operator = op;
       currentState = STATE_OPERATOR;
       break;
-    case STATE_NUMBER_2:
+    case STATE_OPERAND_2:
       evaluateResult();
       continueWithResult(op);
       break;
@@ -246,7 +246,7 @@ function handleClearEntry() {
     case STATE_OPERAND_1:
       operand_1.removeLastDigit();
       break;
-    case STATE_NUMBER_2:
+    case STATE_OPERAND_2:
       operand_2.removeLastDigit();
       if (operand_2.isUnset()) {
         currentState = STATE_OPERATOR;
@@ -295,7 +295,7 @@ function updateView() {
     case STATE_OPERAND_1:
       msg = operand_1.toView();
       break
-    case STATE_NUMBER_2:
+    case STATE_OPERAND_2:
       msg = `${operand_1.toView()} ${operator} ${operand_2.toView()}`
       break;
     case STATE_OPERATOR:
@@ -317,7 +317,7 @@ function handleDecimalPoint() {
     case STATE_OPERAND_1:
       operand_1.addDecimalPoint();
       break;
-    case STATE_NUMBER_2:
+    case STATE_OPERAND_2:
       operand_2.addDecimalPoint();
       break
   }
