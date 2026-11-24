@@ -258,7 +258,7 @@ function handleClearEntry() {
       currentState = STATE_NUMBER_1;
       break;
     case STATE_RESULT:
-      resetState();
+      currentResult.removeLastDigit();
       break;
   }
 }
