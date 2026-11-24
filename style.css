@@ -65,7 +65,7 @@ button.clear-all {
 .display {
   font-family: "Calculator";
   height: 5rem;
-  background-color: #999999;
+  background-color: hsl(0, 0%, 60%);
   margin-bottom: 1rem;
   border: 2px solid black;
   border-radius: 5px;
