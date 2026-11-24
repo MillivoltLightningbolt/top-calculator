@@ -200,9 +200,8 @@ function handleDigits(digit) {
       currentState = STATE_NUMBER_2;
       break;
     case STATE_RESULT:
-      const tmp = digit;
       resetState();
-      number_1.setValue(tmp);
+      number_1.setValue(digit);
       currentState = STATE_NUMBER_1;
       break;
   }
