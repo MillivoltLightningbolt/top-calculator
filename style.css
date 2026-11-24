@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Calculator";
+  src: url("./fonts/digital-7.ttf") format("truetype");
+}
+
 body {
   background-color: hsl(230 7% 29.1%);
 }
@@ -58,14 +63,14 @@ button.clear-all {
 }
 
 .display {
+  font-family: "Calculator";
   height: 5rem;
   background-color: #999999;
   margin-bottom: 1rem;
   border: 2px solid black;
   border-radius: 5px;
   text-align: end;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.6rem;
   padding: 1rem;
 }
 
