@@ -137,6 +137,7 @@ function handleKey(action, key) {
     keys[action]?.(key);
   } catch (err) {
     if (err instanceof DivisionByZeroError) {
+      resetState();
       currentState = STATE_DIVISION_BY_ZERO;
     } else {
       throw err;
