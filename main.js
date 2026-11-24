@@ -232,9 +232,9 @@ function handleOperator(op) {
   }
 }
 
-function continueWithResult(currentInput) {
+function continueWithResult(nextOperator) {
   number_1.setValue(currentResult.getValue());
-  operator = currentInput;
+  operator = nextOperator;
   currentState = STATE_OPERATOR;
 }
 
