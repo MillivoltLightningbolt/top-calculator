@@ -76,7 +76,9 @@ class Operand{
     return new Operand(this.toNumber() * other.toNumber());
   }
 
-  unsafeDivision(other) {
+  /** Throw DivisionByZeroError if denominator is equal to zero (e.g. 0 or 0.0)
+   */
+  divideOrThrow(other) {
     if (other.toNumber() === 0) {
       throw new DivisionByZeroError();
     } else {
@@ -110,7 +112,7 @@ function operate(op, a, b) {
     case OP_MUL:
       return a.multiply(b);
     case OP_DIV:
-      return a.unsafeDivision(b);
+      return a.divideOrThrow(b);
   }
 }
 
