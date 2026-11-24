@@ -3,7 +3,7 @@ const OP_SUB = "-";
 const OP_MUL = "*";
 const OP_DIV = "/";
 
-const MAX_INPUT_LENGTH = 19;
+const MAX_INPUT_LENGTH = 18;
 
 // TODO: maybe store state in object ?
 const STATE_UNSET = "unset"; // no input yet
