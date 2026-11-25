@@ -106,3 +106,9 @@ footer {
 footer a {
   color: hsl(0, 0%, 60%);
 }
+
+.github-logo {
+  padding: 1rem;
+  width: 5rem;
+  height: 5rem;
+}
